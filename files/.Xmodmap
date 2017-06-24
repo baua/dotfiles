@@ -1,0 +1,101 @@
+!Use `xev` to read the keystroks, and this file to implement them:
+!Finally, execute `xmodmap ~/.Xmodmap -pm' to reread this file and also
+!display the resulting/current configuration.
+
+! When defining keycodes:
+! * The first keysym is used when no  modifier key is pressed in conjunction
+!   with  this key
+! * The second with <Shift>
+! * The third when the <Mode_switch> key is used with this key
+! * and the fourth when both the <Mode_switch>+<Shift> keys are used.
+
+! So, when defining keysyms for the `<' and `>' buttons for example:
+!
+!   To make <shift>+`,' be `<', and <shift>+`.' be `>'
+!
+! Do this:
+!
+!   keysym comma = comma less
+!   keysym period = period greater
+
+!---!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!---clear shift
+!---clear lock
+!---clear control
+!---clear mod1
+!---clear mod2
+!---clear mod3
+!---clear mod4
+!---clear mod5
+!---
+!---!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!---! MNWEK7000 Keyboard
+!---! Shift_L    64
+!---! Shift_R    68
+!---keycode      64 = Shift_L
+!---keycode      68 = Shift_R
+!---! Control_L  67
+!---! Control_R  70
+!---keycode      67 = Control_L
+!---keycode      70 = Control_R
+!---! Alt_L      63
+!---! Alt_R      71
+!---keycode      71 = Mode_switch
+!---! Super_L    66
+!---keycode      66 = Super_L
+!---! Meta_R    118
+!---keycode     118 = Meta_R
+!---
+!---!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!---
+!---keycode  65 = Caps_Lock
+!---add lock = Caps_Lock
+!---
+!---keycode  78 = Scroll_Lock
+!---add mod5 = Scroll_Lock
+!---
+!---!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!---add control = Control_L Control_R
+!---add shift = Shift_L Shift_R
+!---add mod1 = Alt_L
+!---add mod2 = Meta_R
+!---add mod3 = Mode_switch
+!---add mod4 = Super_L
+
+!. Dell Laptop
+!shift       Shift_L (0x32),  Shift_R (0x3e)
+!lock        Caps_Lock (0x42)
+!control     Control_L (0x25),  Control_R (0x69)
+!mod1        Alt_L (0x40),  Alt_R (0x6c),  Meta_L (0xcd)
+!mod2        Num_Lock (0x4d)
+!mod3
+!mod4        Super_L (0x85),  Super_R (0x86),  Super_L (0xce),  Hyper_L (0xcf)
+!mod5        ISO_Level3_Shift (0x5c),  Mode_switch (0xcb)
+
+clear shift
+add shift = Shift_L Shift_R
+
+clear control
+add control = Control_L Control_R
+
+clear mod1
+add mod1 = Alt_L Alt_R
+
+keycode 135 = Hyper_R
+clear mod2
+add mod2 = Hyper_R
+
+!clear mod3
+!add mod3 = Mode_switch
+
+clear mod4
+add mod4 = Super_L Super_R
+
+!keycode 77 = Num_Lock
+!keycode 78 = Scroll_Lock
+
+!xmodmap -pke                #. To see what's up
+!xmodmap $HOME/.Xmodmap -pm  #. To say what's up
+
+!keycode 122 = XF86AudioLowerVolume
+!keycode 123 = XF86AudioRaiseVolume
