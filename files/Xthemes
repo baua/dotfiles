@@ -1,0 +1,142 @@
+! vim:se ft=xdefaults:
+#define THEME_DEFAULT 2
+#ifndef THEME
+#  define THEME THEME_DEFAULT
+#endif
+
+#if THEME == 1
+!  LITE {{
+#  define THEME_CBD      rgb:fc/fc/fc
+#  define THEME_FGC      #cdcdcd
+#  define THEME_BGC      #242424
+#  define THEME_FGC_PTR  #FF0000
+#  define THEME_BGC_PTR  #222222
+#  define THEME_COL_CUR  #00FF00
+!  black
+#  define THEME_C0       #222222
+#  define THEME_C8       #454545
+!  red
+#  define THEME_C1       #9E5641
+#  define THEME_C9       #CC896D
+!  green
+#  define THEME_C2       #6C7E55
+#  define THEME_CA       #C4DF90
+!  yellow
+#  define THEME_C3       #CAAF2B
+#  define THEME_CB       #FFE080
+!  blue
+#  define THEME_C4       #7FB8D8
+#  define THEME_CC       #B8DDEA
+!  magenta
+#  define THEME_C5       #956D9D
+#  define THEME_CD       #C18FCB
+!  cuan
+#  define THEME_C6       #4c8ea1
+#  define THEME_CE       #6bc1d0
+!  white
+#  define THEME_C7       #808080
+#  define THEME_CF       #cdcdcd
+! }}
+#elif THEME == 2
+!  DOS {{
+#  define THEME_CBD      rgb:fc/fc/fc
+#  define THEME_FGC      #cdcdcd
+#  define THEME_BGC      #242424
+#  define THEME_FGC_PTR  #FF0000
+#  define THEME_BGC_PTR  #222222
+#  define THEME_COL_CUR  #FFFF00
+!  black
+#  define THEME_C0       rgb:00/00/00
+#  define THEME_C8       rgb:54/54/54
+!  red
+#  define THEME_C1       rgb:a8/00/00
+#  define THEME_C9       rgb:fc/54/54
+!  green
+#  define THEME_C2       rgb:00/a8/00
+#  define THEME_CA       rgb:54/fc/54
+!  yellow
+#  define THEME_C3       rgb:a8/54/00
+#  define THEME_CB       rgb:fc/fc/54
+!  blue
+#  define THEME_C4       rgb:00/00/a8
+#  define THEME_CC       rgb:54/54/fc
+!  magenta
+#  define THEME_C5       rgb:a8/00/a8
+#  define THEME_CD       rgb:54/fc/fc
+!  cuan
+#  define THEME_C6       rgb:00/a8/a8
+#  define THEME_CE       rgb:54/fc/fc
+!  white
+#  define THEME_C7       rgb:a8/a8/a8
+#  define THEME_CF       rgb:fc/fc/fc
+! }}
+#elif THEME == 3
+! Whatever {{
+#  define THEME_CBD      rgb:fc/fc/fc
+#  define THEME_FGC      #cdcdcd
+#  define THEME_BGC      #030303
+#  define THEME_FGC_PTR  #FF0000
+#  define THEME_BGC_PTR  #222222
+#  define THEME_COL_CUR  #00FF00
+!  Blacks
+#  define THEME_C0       #151515
+#  define THEME_C8       #505450
+!  Reds
+#  define THEME_C1       #a60101
+#  define THEME_C9       #f99090
+!  Greens
+#  define THEME_C2       #026802
+#  define THEME_CA       #a7e14b
+!  Yellows
+#  define THEME_C3       #ab6e03
+#  define THEME_CB       #fddc01
+!  Blues
+#  define THEME_C4       #005faf
+#  define THEME_CC       #0087ff
+!  Purples
+#  define THEME_C5       #9c3885
+#  define THEME_CD       #e628ba
+!  Cyans
+#  define THEME_C6       #08bab0
+#  define THEME_CE       #74fff7
+!  Whites
+#  define THEME_C7       #aaaaaa
+#  define THEME_CF       #ffffff
+! }}
+#elif THEME == 4
+#  define THEME_CBD      rgb:fc/fc/fc
+#  define THEME_FGC      #cdcdcd
+#  define THEME_BGC      #030303
+#  define THEME_FGC_PTR  #FF0000
+#  define THEME_BGC_PTR  #222222
+#  define THEME_COL_CUR  #00FF00
+!  black
+#  define THEME_C0       #2E3436
+#  define THEME_C8       #555753
+!  red
+#  define THEME_C1       #a31604
+#  define THEME_C9       #c60001
+!  green
+#  define THEME_C2       #447241
+#  define THEME_CA       #27a343
+!  yellow
+!#  define THEME_C3       #c1951a
+#  define THEME_C3       #a1751a
+#  define THEME_CB       #d5a30e
+!  blue
+#  define THEME_C4       #425387
+#  define THEME_CC       #4a5a8d
+!  magenta
+#  define THEME_C5       #965d98
+#  define THEME_CD       #893c8c
+!  cyan
+#  define THEME_C6       #06989A
+#  define THEME_CE       #12bccb
+!  white
+#  define THEME_C7       #D3D7CF
+#  define THEME_CF       #EEEEEC
+#else
+#  undef THEME
+#endif
+
+!xrdb -merge ~/.Xresources
