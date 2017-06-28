@@ -21,7 +21,7 @@ if [ ${#pkgmgr} -eq 0 ]; then
 fi
 
 declare -A packages
-packages['apt-get']="vim wmii feh libxft-dev fonts-dejavu-core ttf-dejavu"
+packages['apt-get']="vim wmii feh libxft-dev fonts-dejavu-core ttf-dejavu xbindkeys alsa-utils ssh-askpass tmux xtrlock xautolock"
 
 echo -n "Installing necessary packages ... "
 case "${pkgmgr}" in
@@ -60,6 +60,7 @@ for file in files/*; do
     fi
 done
 
+[ ! -d "${HOME}/bin" ]  && mkdir -p "${HOME}/bin"
 [ ! -d "${GITDIR}" ]  && mkdir -p "${GITDIR}"
 pushd "${GITDIR}"
 echo -n "Getting atomicales from github  ... "
@@ -71,6 +72,8 @@ if [ ! -d "atomicles" ]; then
         pushd atomicles
         make
         sudo make install
+        sudo ln -sf /opt/bin/lock /opt/bin/lck
+        popd
     else
         echo " Failed."
         exit 1
@@ -91,6 +94,9 @@ if [ ! -d "wmiii" ]; then
             ln -sf "${PWD}/wmiii" "${HOME}/.wmii"
             if [ $? -eq 0 ]; then
                 echo "Created ${HOME}/.wmii -> ${CWD}/wmiii."
+                pushd "${HOME}/.wmii"
+                make install
+                popd
             else
                 echo "Link creation ${HOME}/.wmii -> ${CWD}/wmiii failed."
             fi
@@ -102,8 +108,13 @@ if [ ! -d "wmiii" ]; then
 else
     echo "directory wmiii already exists."
 fi
+echo -n "Create .xbindkeyrc ... "
+xbindkeys --defaults > ${HOME}/.xbindkeysrc
+echo " Done."
 
-echo "Add the following line into /etc/fstab"
-echo "shm /dev/shm/wmii tmpfs defaults,user,noexec,nodev,nosuid,noauto,noatime,size=512M,nr_inodes=8k,mode=777 0 0"
+echo "(1) Add the following line into /etc/fstab"
+echo "      shm /dev/shm/wmii tmpfs defaults,user,noexec,nodev,nosuid,noauto,noatime,size=512M,nr_inodes=8k,mode=777 0 0"
+echo "(2) Add /opt/bin:${HOME}/bin to your PATH variable" 
+echo "      export PATH=${HOME}/bin:/opt/bin:${PATH} >> ${HOME}/.bash_profile"
 
 popd
