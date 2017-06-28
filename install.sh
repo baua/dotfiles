@@ -2,11 +2,15 @@
 
 pkgbin="$(which apt-get)" || pkgbin="$(which yum)" || pkgbin="$(which zypper)"
 datestr=$(date +"%Y%m%d%H%M")
+logfile="/tmp/dotfiles.install.${datestr}"
 
 GITDIR="${HOME}/git"
 WMIIIGIT="https://github.com/baua/wmiii.git"
 DOTGIT="https://github.com/baua/dotfiles.git"
 ATOMGIT="https://github.com/nima/atomicles.git"
+
+echo "Starting install. See ${logfile} for more details."
+echo
 
 if [ ${#pgkbin[@]} -eq 0 ]; then
     echo "No package manager found."
@@ -16,14 +20,11 @@ fi
 declare -A packages
 packages['apt']="git wmii feh libxft-dev fonts-dejavu-core ttf-dejavu"
 
-echo
-echo "Installing necessary packages ... "
-echo
+echo -n "Installing necessary packages ... "
 case "${pgkbin}" in
     apt)
         sudo apt-get install "${packages[@]}"
         if [ $? -eq 0 ]; then
-            echo
             echo " DONE."
             echo
         else
@@ -37,19 +38,27 @@ case "${pgkbin}" in
         exit 1
 esac
 
-echo
+
+echo "Getting dotfiles from github  ... "
+git clone "${DOTGIT}" > "${logfile}" 2>&1
+if [ $? -eq 0 ]; then
+    echo " Done."
+else
+    echo " Failed."
+    exit 1
+fi
+
 echo "Linking dot files  ... "
-echo
 local filename
 local bkpdir="${CWD}/tmp/dotfiles.backup.${datestr}"
-for file in "$(ls files)"; do
+for file in files/*; do
     filename="files/${file}"
     linkname="${HOME}/${file}"
     if [ -e "${linkname}" ]; then
         mkdir -p "${bkpdir}"
         mv "${linkname}" "${bkpdir}"/
     fi
-    ln -sf "${filename}" "${linkname}"
+    ln -sf "${filename}" "${linkname}" > "${logfile}" 2>&1
     if [ $? -eq 0 ]; then
         echo "Created ${linkname} -> ${filename}."
     else
@@ -57,5 +66,11 @@ for file in "$(ls files)"; do
     fi
 done
 
-
-
+echo "Getting wmiii from github  ... "
+git clone "${WMIIIGIT}" > "${logfile}" 2>&1
+if [ $? -eq 0 ]; then
+    echo " Done."
+else
+    echo " Failed."
+    exit 1
+fi
