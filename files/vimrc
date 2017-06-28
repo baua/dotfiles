@@ -1,0 +1,552 @@
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" File:		Nima's .vimrc - v2.00
+" Author:	Nima Talebi <nima@it.net.au>
+".
+" LastChangedDate:: Wed Apr 27, 2011  04:24PM
+" LastChangedBy:: Nima Talebi <nima@autonomy.net.au>
+" BasedOn: http://www.robodesign.ro/files/linux/.vimrc
+" BasedOn: http://hermitte.free.fr/vim/
+".
+" Reminders:
+". * Back to cursor position before last move
+".
+""" Template """""""""""""""""""""""""""""""""""""""""""""""""""""""""""" {{ """
+
+""" }} """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+""" BEGIN """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" {{ """
+". BEGIN
+". Only run this script once.
+if exists("g:imported")
+    finish
+endif
+let g:imported = 1
+""" }} """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""" Configuration """"""""""""""""""""""""""""""""""""""""""""""""""""""" {{ """
+set verbose=0
+let s:RD_use_mem  = 1  " Allow vim to hog memory
+let s:RD_use_conn = 1  " Allow vim to use colors
+let s:RD_privacy  = 0
+set directory=.,$TEMP  " Swap file...
+""" }} """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""" Basics """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" {{ """
+". Encoding...
+set encoding=utf-8
+set fileencodings=ucs-bom,utf-8,latin1,default
+
+if s:RD_use_mem
+    set history=1000
+    set maxmemtot=2000000
+    set maxmem=2000000
+endif
+
+if s:RD_use_conn
+    syntax on
+    set ttyfast
+    set ttyscroll=0
+    set synmaxcol=500
+endif
+
+". Auto-Complete...
+set complete+=i         " Scan included files for autocomplete
+set wildmenu
+
+" Switch syntax highlighting on, when the terminal has colors
+" Also switch on highlighting the last used search pattern.
+if &t_Co > 2 || has("gui_running")
+    set hlsearch
+    set incsearch
+endif
+set modeline
+set modeline modelines=5
+
+" Caution, vnoremap and vmap work in Visual AND Select mode. To have a mapping
+" only in Visual mode, use xmap and xnoremap.
+
+" Highlight search expressions, and set space to turn off highlighting and
+" clear any message already displayed.
+set hlsearch
+
+if version >= 700
+    set mouse=ar
+endif
+
+if version >= 730
+call matchadd('Special', '\<\(VULN\|PENTEST\|NiMA\|rasputin\|fuck\|cunt\|shit\|whore\|slut\)\>')
+endif
+hi Comment ctermfg=darkgrey
+
+set background=dark
+set selectmode=mouse,key
+set scrolloff=7
+set cmdheight=1
+set display=lastline
+set report=0            " Threshold for reporting number of lines changed.
+set shortmess=as        " Shorter messages
+set showcmd             " Show (partial) command in status line.
+set lazyredraw          " Do not redraw while running macros (much faster).
+set novisualbell
+set showmatch           " Show Matching brackets
+set mat=3               " How many tenths of a second to blink matching brackets for
+
+". Formatting & Indenting...
+set smartindent
+au! FileType python setl nosmartindent
+"
+set autoindent
+set nocindent
+set formatoptions=tcroqn
+set expandtab
+set shiftwidth=4
+set tabstop=4
+set softtabstop=4
+" If on Vim will wrap long lines at a character in 'breakat' rather than at the
+" last character that fits on the screen.
+set linebreak
+set breakat=\
+set joinspaces " Insert 2 spaces when joining lines terminated with a period.
+
+set nowritebackup
+set backspace=indent,eol,start
+set virtualedit=block
+set nrformats=alpha,hex
+set shiftround
+set scs
+set ic sc
+set wrap
+set nostartofline
+set nocompatible " Use Vim defaults (much better!)
+
+""" shellcheck -={
+set nocompatible
+filetype off
+let &runtimepath.=',~/.vim/bundle/ale'
+filetype plugin on
+silent! helptags ALL
+" let g:ale_statusline_format = ['⨉ %d', '⚠ %d', '⬥ ok']
+""" }=-
+
+
+". Crosshair editing
+"if version >= 700
+"    set cursorline
+"    set cursorcolumn
+"    "highlight CursorLine   ctermfg=red
+"    "highlight CursorColumn ctermbg=red
+"endif
+
+filetype plugin indent on
+
+". Past 80 - Make it RED...
+highlight OverLength ctermbg=red ctermfg=white guibg=#663333
+match OverLength /\%81v.*/
+
+". Vimdiff Settings...
+set diffopt+=iwhite
+
+". Terminal
+if &term=="xterm"
+    set t_Co=8
+    set t_Sb=[4%dm
+    set t_Sf=[3%dm
+endif
+
+" Navigation
+"
+" Allow specified keys that move the cursor left/right to move to the previous/
+" next line when the cursor is on the first/last character in the line.
+" b (backspace), s (space) and the arrows.
+set whichwrap=b,s,<,>
+
+". File-type related settings...
+set fileformats=unix,mac,dos                  " Support all three, in this order
+"filetype plugin indent on
+
+". Highlight spaces at the end of the line...
+highlight WhitespaceEOL ctermbg=red guibg=red
+match WhitespaceEOL /\s\+$/
+
+". Line numbers...
+highlight LineNr term=bold cterm=NONE ctermfg=DarkGrey ctermbg=NONE gui=NONE guifg=DarkGrey guibg=NONE
+set number
+if version >= 640
+  set numberwidth=5
+endif
+
+". Save and Restore State
+if s:RD_privacy == 0
+    if has("autocmd")
+        " When editing a file, always jump to the last cursor position
+        autocmd BufReadPost *
+        \ if line("'\"") > 0 && line ("'\"") <= line("$") |
+        \   exe "normal g'\"" |
+        \ endif
+    endif
+
+    ". Remember information between vim restarts.
+    set viminfo='200,\"300,s150,%,h,!
+
+    ". Auto-save the fold state on exit, and auto-load the state on open
+	"au BufWinLeave * mkview
+    "au BufWinEnter * silent loadview
+
+	set directory=~/tmp/
+else
+    set viminfo=
+endif
+""" }} """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""" Status Line """"""""""""""""""""""""""""""""""""""""""""""""""""""""" {{ """
+set laststatus=2 " enable status line always
+function! InsertStatuslineColor(mode)
+    if a:mode == 'i'
+        hi StatusLine ctermbg=0 ctermfg=blue cterm=reverse
+    elseif a:mode == 'r'
+        hi StatusLine ctermbg=0 ctermfg=red cterm=reverse
+    elseif a:mode == 's'
+        hi StatusLine ctermbg=0 ctermfg=yellow cterm=reverse
+    elseif a:mode == 'v'
+        hi StatusLine ctermbg=0 ctermfg=magenta cterm=reverse
+    else
+        hi StatusLine ctermbg=0 ctermfg=cyan cterm=reverse
+    endif
+endfunction
+if version >= 700
+                     hi StatusLine ctermbg=0 ctermfg=green cterm=reverse
+    au InsertLeave * hi StatusLine ctermbg=0 ctermfg=green cterm=reverse
+    au InsertEnter * call InsertStatuslineColor(v:insertmode)
+endif
+set statusline=%n:\ [%l/%L,%v][%p%%]\ %f%m%r%h%w\ [%Y,%{&fileencoding},%{&fileformat}]
+
+". Enable the ruler with the format:
+"{buffer number}{modified/readonly flag}: {file type} [current line, current column] {position percentage in file}
+set ruler
+set rulerformat=%25(%n%m%r:\ %Y\ [%l,%v]\ %p%%%)
+""" }} """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""" Hot-Keys """""""""""""""""""""""""""""""""""""""""""""""""""""""""""" {{ """
+
+"Keys    Notation
+"<BS>    Backspace
+"<Tab>   Tab
+"<CR>    Enter
+"<Enter> Enter
+"<Return>    Enter
+"<Esc>   Escape
+"<Space> Space
+"<Up>    Up arrow
+"<Down>  Down arrow
+"<Left>  Left arrow
+"<Right> Right arrow
+"<F1> <F12>  Function keys 1 to 12
+"#1 #9#0 Function keys F1 to F9, F10
+"<Insert>    Insert
+"<Del>   Delete
+"<Home>  Home
+"<End>   End
+"<PageUp>    Page up
+"<PageDown>  Page down
+
+". LodgeIt - FIXME
+"map <F3> :Lodgeit<cr>
+"let lodgeit="$HOME/.vim/plugin/lodgeit.vim"
+"if filereadable(lodgeit)
+"    source lodgeit
+"endif
+
+". Shortcut to save file - normal mode
+map  <silent> <F2> :w<CR>
+". Shortcut to save file - insert mode
+map! <silent> <F2> <ESC>:w<CR>
+
+". Copy/Paste Mode
+set pastetoggle=<F5>
+map <silent> <F5> :call CopyPasteToggle()<CR>
+set listchars=tab:\|\ ,trail:.,extends:>,precedes:<,eol:$ " What to show when you do :set list
+fun! CopyPasteToggle()
+    if !exists("b:cpt") || !b:cpt
+        let b:cpt = 1
+        set nonu wrap paste
+    else
+        let b:cpt = 0
+        set nu nowrap nopaste
+    endif
+endfunction
+
+map <silent> <F6> :call ListToggle()<CR>
+fun! ListToggle()
+    if !exists("b:list") || !b:list
+        let b:list = 1
+        set list
+    else
+        let b:list = 0
+        set nolist
+    endif
+endfunction
+
+" Search the first 5 lines for LastChanged{By/Date}: and update the current datetime.
+"map <silent> <F10> :call LastMode()<CR>
+"function! LastMod()
+"    if line("$") > 10
+"        let l = 10
+"    else
+"        let l = line("$")
+"    endif
+"    exe "1," . l . "g/LastChangedDate:: /s/LastChangedDate:: .*/LastChangedDate:: " . strftime("%a %b %d, %Y  %I:%M%p")
+"    exe "1," . l . "g/LastChangedBy:: /s/LastChangedBy:: .*/LastChangedBy:: Nima Talebi <nima@autonomy.net.au>"
+"endfunction
+"
+"if has("autocmd")
+"    autocmd BufWrite * ks|call LastMod()|'s
+"endif
+
+". Hex Editor
+map <silent> <F12> :call ToggleHex()<CR>
+function ToggleHex()
+    " hex mode should be considered a read-only operation
+    " save values for modified and read-only for restoration later,
+    " and clear the read-only flag for now
+    let l:modified=&mod
+    let l:oldreadonly=&readonly
+    let &readonly=0
+    let l:oldmodifiable=&modifiable
+    let &modifiable=1
+    if !exists("b:editHex") || !b:editHex
+        " save old options
+        let b:oldft=&ft
+        let b:oldbin=&bin
+        " set new options
+        setlocal binary " make sure it overrides any textwidth, etc.
+        let &ft="xxd"
+        " set status
+        let b:editHex=1
+        " switch to hex editor
+        %!xxd
+    else
+        " restore old options
+        let &ft=b:oldft
+        if !b:oldbin
+        setlocal nobinary
+        endif
+        " set status
+        let b:editHex=0
+        " return to normal editing
+        %!xxd -r
+    endif
+    " restore values for modified and read only state
+    let &mod=l:modified
+    let &readonly=l:oldreadonly
+    let &modifiable=l:oldmodifiable
+endfunction
+
+". F1 annoying help
+inoremap <F1> <Esc>
+noremap <F1> :call MapF1()<CR>
+function! MapF1()
+  if &buftype == "help"
+    exec 'quit'
+  else
+    exec 'help'
+  endif
+endfunction
+
+". CTags
+set tags=tags;/
+map <silent> <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
+map <silent> <A-]> :vsp <CR>:exec("tag ".expand("<cword>"))<CR>
+
+". Quit All
+map <silent> <C-c> :qall<CR>
+
+". Screen-Lock Editor
+map <silent> L :!tty-clock<CR><CR>
+
+". Cases sensitivity with F8
+nmap <silent> <F8> :set ignorecase! ignorecase?<CR>
+
+". Folding
+if version >= 640
+    set nofoldenable
+    "set foldcolumn=4        " Fold column width
+    set foldmethod=indent    " Make folding indent sensitive
+    set foldminlines=2
+    set foldlevel=4          " Folds with a higher level will be automatically closed.
+    set foldopen=            " Don't auto-open folds
+    set nopaste
+endif
+set foldmethod=marker
+set foldmarker=-={,}=-
+
+"nnoremap <silent> <F6> @=(foldlevel('.')?'zR':'zM')<CR>
+nnoremap <silent> <F6> zR<CR>
+nnoremap <silent> <F7> zM<CR>
+
+". Press ; instead of za for zc-zo toggling...
+map ; za
+". Press space to encapsulate visual-select into a tag block
+nnoremap <silent> <Space> @=(foldlevel('.')?'za':'l')<CR>
+vnoremap <Space> zf
+
+noremap <silent> <Space><Space> :nohlsearch<CR>:echo<CR>
+map <silent> <F10> :%s/ *$//<CR><space><space>``zz
+
+""" }} """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""" Special File Formats """""""""""""""""""""""""""""""""""""""""""""""" {{ """
+if has("autocmd")
+". TXT
+    autocmd BufRead *.txt set tw=78
+
+    ". Git
+    autocmd FileType gitcommit set textwidth=70
+
+    ". Make
+    " in makefiles, don't expand tabs to spaces, since actual tab characters are
+    " needed, arend have indentation at 8 chars to be sure that all indents are tabs
+    " (despite the mappings later):
+    autocmd FileType make set noexpandtab shiftwidth=8 ts=8 smarttab
+endif
+
+". Perl
+let perl_extended_vars=1 " Highlight advanced perl vars inside strings
+
+". PHP
+let php_htmlInStrings=1 " Highlight HTML code inside PHP strings
+let php_sql_query=1 " Highlight mySQL queries inside PHP strings
+let php_asp_tags=1 " Highlight PHP code inside ASP-like tags
+""" }} """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""" Spelling """""""""""""""""""""""""""""""""""""""""""""""""""""""""""" {{ """
+iab teh        the
+iab gerp       grep
+iab beacuse    because
+iab becuase    because
+iab acn        can
+iab cna        can
+iab centre     center
+iab chnage     change
+iab chnages    changes
+iab chnaged    changed
+iab chnagelog  changelog
+iab Chnage     Change
+iab Chnages    Changes
+iab ChnageLog  ChangeLog
+iab debain     debian
+iab Debain     Debian
+iab defualt    default
+iab Defualt    Default
+iab differnt   different
+iab diffrent   different
+iab emial      email
+iab Emial      Email
+iab english    English
+iab hebrew     Hebrew
+iab currect    correct
+iab figth      fight
+iab figther    fighter
+iab fro        for
+iab fucntion   function
+iab ahve       have
+iab homepgae   homepage
+iab logifle    logfile
+iab lokk       look
+iab lokking    looking
+iab mial       mail
+iab Mial       Mail
+iab miantainer maintainer
+iab amke       make
+iab mroe       more
+iab nwe        new
+iab recieve    receive
+iab recieved   received
+iab erturn     return
+iab retrun     return
+iab retunr     return
+iab seperate   separate
+iab shoudl     should
+iab soem       some
+iab taht       that
+iab thta       that
+iab teh        the
+iab tehy       they
+iab truely     truly
+iab waht       what
+iab wiht       with
+iab whic       which
+iab whihc      which
+iab yuo        you
+iab databse    database
+iab versnio    version
+iab obnsolete  obsolete
+iab flase      false
+iab recrusive  recursive
+iab Recrusive  Recursive
+iab destribution distribution
+""" }} """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""" TODO/FIXME """""""""""""""""""""""""""""""""""""""""""""""""""""""""" {{ """
+"if has("cscope")
+"   set csprg=/usr/bin/cscope
+"   set csto=0
+"   set cst
+"   set nocsverb
+"   if filereadable("cscope.out")
+"        " add any database in current directory
+"        cs add cscope.out
+"   elseif $CSCOPE_DB != ""
+"        " else add database pointed to by environment
+"        cs add $CSCOPE_DB
+"   endif
+"   set csverb
+"endif
+"
+"noremap <silent> <Leader>. :exe 'cd ' . substitute(expand("%:p:h"), ' ', "\\\\ ", 'g')<CR>
+"iab rdcopy <C-o>:call <SID>RD_copyright()<CR>
+"function s:RD_copyright ()
+"  exe "normal i © " . strftime("%Y") . " ROBO Design\rhttp://www.robodesign.ro "
+"  normal Vk_c$
+"endfunction
+"
+"noremap <silent> <Leader>w :call ToggleWrap()<CR>
+"function ToggleWrap()
+"  if &wrap
+"    echo "Wrap OFF"
+"    setlocal nowrap
+"    set virtualedit=all
+"    silent! nunmap <buffer> <Up>
+"    silent! nunmap <buffer> <Down>
+"    silent! nunmap <buffer> <Home>
+"    silent! nunmap <buffer> <End>
+"    silent! iunmap <buffer> <Up>
+"    silent! iunmap <buffer> <Down>
+"    silent! iunmap <buffer> <Home>
+"    silent! iunmap <buffer> <End>
+"  else
+"    echo "Wrap ON"
+"    setlocal wrap linebreak nolist
+"    set virtualedit=
+"    setlocal display+=lastline
+"    noremap  <buffer> <silent> <Up>   gk
+"    noremap  <buffer> <silent> <Down> gj
+"    noremap  <buffer> <silent> <Home> g<Home>
+"    noremap  <buffer> <silent> <End>  g<End>
+"    inoremap <buffer> <silent> <Up>   <C-o>gk
+"    inoremap <buffer> <silent> <Down> <C-o>gj
+"    inoremap <buffer> <silent> <Home> <C-o>g<Home>
+"    inoremap <buffer> <silent> <End>  <C-o>g<End>
+"  endif
+"endfunction
+""" }} """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""" Bash """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" {{ """
+function! BashSyntax()
+    if &ft == "bash"
+        let b:is_bash=1
+        set ft=sh
+    endif
+	map! fnfn function{;}<ESC>2ba
+endfunction
+au FileType * call BashSyntax()
+
+""" }} """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""" ENDE """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" {{ """
+set secure
+syn sync fromstart
+""" }} """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+
+". vim: set spell spl=en ts=4 sw=4 sts=4 sta noet fenc=utf-8 ff=unix:
