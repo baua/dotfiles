@@ -1,10 +1,12 @@
 #!/bin/bash
 
+# Change as needed
+GITDIR="${HOME}/git"
+
 pkgbin="$(which apt-get)" || pkgbin="$(which yum)" || pkgbin="$(which zypper)"
 datestr=$(date +"%Y%m%d%H%M")
 logfile="/tmp/dotfiles.install.${datestr}"
 
-GITDIR="${HOME}/git"
 WMIIIGIT="https://github.com/baua/wmiii.git"
 DOTGIT="https://github.com/baua/dotfiles.git"
 ATOMGIT="https://github.com/nima/atomicles.git"
@@ -39,15 +41,6 @@ case "${pgkbin}" in
 esac
 
 
-echo "Getting dotfiles from github  ... "
-git clone "${DOTGIT}" > "${logfile}" 2>&1
-if [ $? -eq 0 ]; then
-    echo " Done."
-else
-    echo " Failed."
-    exit 1
-fi
-
 echo "Linking dot files  ... "
 local filename
 local bkpdir="${CWD}/tmp/dotfiles.backup.${datestr}"
@@ -66,6 +59,7 @@ for file in files/*; do
     fi
 done
 
+pushd "${GITDIR}"
 echo "Getting wmiii from github  ... "
 git clone "${WMIIIGIT}" > "${logfile}" 2>&1
 if [ $? -eq 0 ]; then
@@ -74,3 +68,4 @@ else
     echo " Failed."
     exit 1
 fi
+popd
