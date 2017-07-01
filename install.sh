@@ -10,6 +10,7 @@ logfile="/tmp/dotfiles.install.${datestr}"
 WMIIIGIT="https://github.com/baua/wmiii.git"
 DOTGIT="https://github.com/baua/dotfiles.git"
 ATOMGIT="https://github.com/nima/atomicles.git"
+BASHOGIT="https://github.com/nima/bashophilia.git"
 
 echo "Starting install. See ${logfile} for more details."
 echo
@@ -45,7 +46,7 @@ echo "Linking dot files  ... "
 declare filename
 declare bkpdir="${PWD}/tmp/dotfiles.backup.${datestr}"
 for file in files/*; do
-    filename="${PWD}/${file}"
+    filename="${PWD}/${file}"a
     linkname="${HOME}/.${file##*/}"
     if [ -f "${linkname}" ]; then
         mkdir -p "${bkpdir}"
@@ -60,7 +61,9 @@ for file in files/*; do
 done
 
 [ ! -d "${HOME}/bin" ]  && mkdir -p "${HOME}/bin"
+[ ! -d "${HOME}/.config" ]  && mkdir -p "${HOME}/.config"
 [ ! -d "${GITDIR}" ]  && mkdir -p "${GITDIR}"
+
 pushd "${GITDIR}"
 echo -n "Getting atomicales from github  ... "
 [ ! -d "/opt/bin" ] && sudo mkdir -p /opt/bin
@@ -107,6 +110,22 @@ if [ ! -d "wmiii" ]; then
 else
     echo "directory wmiii already exists."
 fi
+
+echo -n "Getting bashophilia from github  ... "
+if [ ! -d "bashophilia" ]; then
+    git clone "${BASHOGIT}" > "${logfile}" 2>&1
+    if [ $? -eq 0 ]; then
+        echo " Done."
+        ln -sf "${PWD}/bashophilia" "${HOME}.config/bashophilia"
+        cp "${PWD}/bashophilia/share/dot.boprc" "${HOME}/.boprc"
+    else
+        echo " Failed."
+        exit 1
+    fi
+else
+    echo "directory bashophilia already exists."
+fi
+
 echo -n "Create .xbindkeyrc ... "
 xbindkeys --defaults > ${HOME}/.xbindkeysrc
 echo " Done."
