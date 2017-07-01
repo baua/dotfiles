@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # Change as needed
 GITDIR="${HOME}/git"
 
@@ -21,7 +20,7 @@ if [ ${#pkgmgr} -eq 0 ]; then
 fi
 
 declare -A packages
-packages['apt-get']="vim wmii feh libxft-dev fonts-dejavu-core ttf-dejavu xbindkeys alsa-utils ssh-askpass tmux xtrlock xautolock"
+packages['apt-get']="vim wmii feh libxft-dev fonts-dejavu-core gawk gxmessage ttf-dejavu xbindkeys alsa-utils sed ssh-askpass tmux xtrlock xautolock"
 
 echo -n "Installing necessary packages ... "
 case "${pkgmgr}" in
