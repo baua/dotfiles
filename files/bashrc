@@ -40,6 +40,6 @@ alias ....="cd ../../.."
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
-source ~/.config/bashophilia/bashophilia.sh
+source ~/.config/bashophilia/bashophile.sh
 export PATH="${HOME}/bin:/opt/bin/:/usr/local/bin:${PATH}"
 export PROFILE=HOME

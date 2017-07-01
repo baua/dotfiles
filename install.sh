@@ -46,7 +46,7 @@ echo "Linking dot files  ... "
 declare filename
 declare bkpdir="${PWD}/tmp/dotfiles.backup.${datestr}"
 for file in files/*; do
-    filename="${PWD}/${file}"a
+    filename="${PWD}/${file}"
     linkname="${HOME}/.${file##*/}"
     if [ -f "${linkname}" ]; then
         mkdir -p "${bkpdir}"
@@ -98,6 +98,7 @@ if [ ! -d "wmiii" ]; then
                 echo "Created ${HOME}/.wmii -> ${CWD}/wmiii."
                 pushd "${HOME}/.wmii"
                 make install
+                make installx
                 popd
             else
                 echo "Link creation ${HOME}/.wmii -> ${CWD}/wmiii failed."
@@ -116,8 +117,6 @@ if [ ! -d "bashophilia" ]; then
     git clone "${BASHOGIT}" > "${logfile}" 2>&1
     if [ $? -eq 0 ]; then
         echo " Done."
-        ln -sf "${PWD}/bashophilia" "${HOME}.config/bashophilia"
-        cp "${PWD}/bashophilia/share/dot.boprc" "${HOME}/.boprc"
     else
         echo " Failed."
         exit 1
@@ -125,6 +124,8 @@ if [ ! -d "bashophilia" ]; then
 else
     echo "directory bashophilia already exists."
 fi
+ln -sf "${PWD}/bashophilia" "${HOME}/.config/bashophilia"
+cp "${PWD}/bashophilia/share/dot.boprc" "${HOME}/.boprc"
 
 echo -n "Create .xbindkeyrc ... "
 xbindkeys --defaults > ${HOME}/.xbindkeysrc
@@ -132,7 +133,5 @@ echo " Done."
 
 echo "(1) Add the following line into /etc/fstab"
 echo "      shm /dev/shm/wmii tmpfs defaults,user,noexec,nodev,nosuid,noauto,noatime,size=512M,nr_inodes=8k,mode=777 0 0"
-echo "(2) Add /opt/bin:${HOME}/bin to your PATH variable" 
-echo "      export PATH=${HOME}/bin:/opt/bin:${PATH} >> ${HOME}/.bash_profile"
 
 popd
