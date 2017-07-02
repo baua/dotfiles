@@ -132,6 +132,6 @@ xbindkeys --defaults > ${HOME}/.xbindkeysrc
 echo " Done."
 
 echo "(1) Add the following line into /etc/fstab"
-echo "      shm /dev/shm/wmii tmpfs defaults,user,noexec,nodev,nosuid,noauto,noatime,size=512M,nr_inodes=8k,mode=777 0 0"
+echo "      shm /dev/shm/wmii tmpfs defaults,user,noexec,nodev,nosuid,noauto,noatime,size=1024M,nr_inodes=8k,mode=777 0 0"
 
 popd
