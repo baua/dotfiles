@@ -21,7 +21,7 @@ if [ ${#pkgmgr} -eq 0 ]; then
 fi
 
 declare -A packages
-packages['apt-get']="vim wmii feh libxft-dev fonts-dejavu-core gawk gxmessage ttf-dejavu xbindkeys alsa-utils sed ssh-askpass tmux xtrlock xautolock"
+packages['apt-get']="acpi alsa-utils convert feh libxft-dev fonts-dejavu-core gawk gxmessage libatasmart-bin ttf-dejavu xbindkeys sed ssh-askpass tmux vim wmii wpasupplicant xautolock xclip xinit xsel xterm xtrlock"
 
 echo -n "Installing necessary packages ... "
 case "${pkgmgr}" in
