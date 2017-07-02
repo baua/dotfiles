@@ -44,7 +44,8 @@ esac
 
 echo "Linking dot files  ... "
 declare filename
-declare bkpdir="${PWD}/tmp/dotfiles.backup.${datestr}"
+declare bkpdir="${HOME}/tmp/dotfiles.backup.${datestr}"
+mkdir -p "${bkpdir}"
 for file in files/*; do
     filename="${PWD}/${file}"
     linkname="${HOME}/.${file##*/}"
@@ -59,6 +60,11 @@ for file in files/*; do
         echo "Link creation ${linkname} -> ${filename} failed."
     fi
 done
+if [ "$(find ${bkpdir} -type -d -empty)" == "${bkpdir}" ]; then
+    rm -rf "${bkpdir}"
+else
+    echo "All pre-existing files have been saved under ${bkpdir}."
+fi
 
 [ ! -d "${HOME}/bin" ]  && mkdir -p "${HOME}/bin"
 [ ! -d "${HOME}/.config" ]  && mkdir -p "${HOME}/.config"
