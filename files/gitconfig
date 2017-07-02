@@ -4,6 +4,9 @@
 	name = Martin Lehmann
 	email = martin@ml-solutions.org
 
+[github]
+    user=baua
+
 [core]
 	editor = vim +1
 [color]
