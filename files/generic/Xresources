@@ -116,7 +116,7 @@ URxvt.url-select.underline:   true
 ! }=-
 
 #define THEME 1
-#include ".Xthemes"
+#include "/home/wloh/.Xthemes"
 #ifdef THEME
 urxvt*colorBD:                THEME_CBD
 urxvt*foreground:             THEME_FGC
@@ -193,7 +193,7 @@ xterm*urgentOnBell: true
 xterm*termName: xterm-256color
 
 #define THEME 1
-#include ".Xthemes"
+#include "/home/wloh/.Xthemes"
 #ifdef THEME
 xterm*colorBD:                THEME_CBD
 xterm*foreground:             THEME_FGC

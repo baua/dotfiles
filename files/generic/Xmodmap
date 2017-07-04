@@ -82,6 +82,7 @@ clear mod1
 add mod1 = Alt_L Alt_R
 
 keycode 135 = Hyper_R
+keycode 94 = grave asciitilde
 clear mod2
 add mod2 = Hyper_R
 

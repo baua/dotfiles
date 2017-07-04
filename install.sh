@@ -1,9 +1,24 @@
 #!/bin/bash
 # Change as needed
 GITDIR="${HOME}/git"
+rv="$(lsb_release -d)"
+descr="${rv##Description:}"
+distro="${descr%% *}"
 
-pkgbin="$(which apt-get)" || pkgbin="$(which yum)" || pkgbin="$(which zypper)"
+# look for package manager
+if ! pkgbin="$(which apt-get 2>/dev/null)"; then
+    if ! pkgbin="$(which dnf 2>/dev/null)"; then
+        if ! pkgbin="$(which yum 2>/dev/null)"; then
+            pkgbin="$(which zypper 2>/dev/null)"
+        fi
+    fi
+fi
 pkgmgr="${pkgbin##*/}"
+if [ ${#pkgbin[@]} -eq 0 ]; then
+    echo "No package manager found."
+    exit 1
+fi
+
 datestr=$(date +"%Y%m%d%H%M")
 logfile="/tmp/dotfiles.install.${datestr}"
 
@@ -21,11 +36,13 @@ if [ ${#pkgmgr} -eq 0 ]; then
 fi
 
 declare -A packages
-packages['apt-get']="acpi alsa-utils convert feh libxft-dev fonts-dejavu-core gawk gxmessage libatasmart-bin ttf-dejavu xbindkeys sed ssh-askpass tmux vim wmii wpasupplicant xautolock xclip xinit xsel xterm xtrlock"
+packages['apt-get']="acpi alsa-utils convert feh htop libxft-dev fonts-dejavu-core gawk gxmessage libatasmart-bin ttf-dejavu xbindkeys sed ssh-askpass tmux vim wmii wpasupplicant xautolock xclip xinit xsel xterm xtrlock"
+packages['yum']="acpi alsa-utils ImageMagick feh htop libXft-devel dejavu-fonts-common gawk gxmessage libatasmart xbindkeys sed x11-ssh-askpass tmux vim wmii wpa_supplicant xautolock xclip xinit xsel xterm xlockmore"
+packages['dnf']="acpi alsa-utils ImageMagick feh htop libXft-devel dejavu-fonts-common gawk gxmessage libatasmart xbindkeys sed x11-ssh-askpass tmux vim wmii wpa_supplicant xautolock xclip xinit xsel xterm xlockmore"
 
 echo -n "Installing necessary packages ... "
 case "${pkgmgr}" in
-    apt-get)
+    apt-get|dnf)
         bash -c "sudo ${pkgbin} -y install ${packages[@]}"
         if [ $? -eq 0 ]; then
             echo " DONE."
@@ -41,12 +58,11 @@ case "${pkgmgr}" in
         exit 1
 esac
 
-
 echo "Linking dot files  ... "
 declare filename
 declare bkpdir="${HOME}/tmp/dotfiles.backup.${datestr}"
 mkdir -p "${bkpdir}"
-for file in files/*; do
+for file in files/generic/*; do
     filename="${PWD}/${file}"
     linkname="${HOME}/.${file##*/}"
     if [ -f "${linkname}" ]; then
@@ -60,6 +76,8 @@ for file in files/*; do
         echo "Link creation ${linkname} -> ${filename} failed."
     fi
 done
+[ -f "${HOME}/.bashrc" ] && source "${HOME}/.bashrc"
+
 if [ "$(find ${bkpdir} -type -d -empty)" == "${bkpdir}" ]; then
     rm -rf "${bkpdir}"
 else
@@ -96,13 +114,13 @@ if [ ! -d "wmiii" ]; then
     git clone "${WMIIIGIT}" > "${logfile}" 2>&1
     if [ $? -eq 0 ]; then
         echo " Done."
-        if [ -d "${HOME}/.wmii" ]; then
-            "${HOME}/.wmii already exists. Relink or remove."
+        if [ -d "${HOME}/.wmii-hg" ]; then
+            "${HOME}/.wmii-hg already exists. Relink or remove."
         else
-            ln -sf "${PWD}/wmiii" "${HOME}/.wmii"
+            ln -sf "${PWD}/wmiii" "${HOME}/.wmii-hg" && ln -sf "${HOME}/.wmii-hg" "${HOME}/.wmii"
             if [ $? -eq 0 ]; then
-                echo "Created ${HOME}/.wmii -> ${CWD}/wmiii."
-                pushd "${HOME}/.wmii"
+                echo "Created ${HOME}/.wmii-hg -> ${CWD}/wmiii."
+                pushd "${HOME}/.wmii-hg"
                 make install
                 make installx
                 popd
