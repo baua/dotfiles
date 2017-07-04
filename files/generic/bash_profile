@@ -5,7 +5,7 @@ export JAVA_HOME="/usr/java/latest"
 
 gpg-agent --daemon --write-env-file "${HOME}/.gpg-agent-info"
 if [ -f "${HOME}/.gpg-agent-info" ]; then
-   . "${HOME}/.gpg-agent-info"
+   . "${HOME}/.gpg-agent-info" > /dev/null 2>&1
   export GPG_AGENT_INFO
   export SSH_AUTH_SOCK
   export SSH_AGENT_PID

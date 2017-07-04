@@ -76,13 +76,8 @@ for file in files/generic/*; do
         echo "Link creation ${linkname} -> ${filename} failed."
     fi
 done
-[ -f "${HOME}/.bashrc" ] && source "${HOME}/.bashrc"
+[ -e "${HOME}/.bash_profile" ] && source "${HOME}/.bash_profile"
 
-if [ "$(find ${bkpdir} -type -d -empty)" == "${bkpdir}" ]; then
-    rm -rf "${bkpdir}"
-else
-    echo "All pre-existing files have been saved under ${bkpdir}."
-fi
 
 [ ! -d "${HOME}/bin" ]  && mkdir -p "${HOME}/bin"
 [ ! -d "${HOME}/.config" ]  && mkdir -p "${HOME}/.config"
@@ -96,6 +91,7 @@ if [ ! -d "atomicles" ]; then
     if [ $? -eq 0 ]; then
         echo " Done."
         pushd atomicles
+        sed -i 's/ln -s /ln -sf /g' Makefile
         make
         sudo make install
         sudo ln -sf /opt/bin/lock /opt/bin/lck
@@ -112,28 +108,26 @@ fi
 echo -n "Getting wmiii from github  ... "
 if [ ! -d "wmiii" ]; then
     git clone "${WMIIIGIT}" > "${logfile}" 2>&1
-    if [ $? -eq 0 ]; then
-        echo " Done."
-        if [ -d "${HOME}/.wmii-hg" ]; then
-            "${HOME}/.wmii-hg already exists. Relink or remove."
-        else
-            ln -sf "${PWD}/wmiii" "${HOME}/.wmii-hg" && ln -sf "${HOME}/.wmii-hg" "${HOME}/.wmii"
-            if [ $? -eq 0 ]; then
-                echo "Created ${HOME}/.wmii-hg -> ${CWD}/wmiii."
-                pushd "${HOME}/.wmii-hg"
-                make install
-                make installx
-                popd
-            else
-                echo "Link creation ${HOME}/.wmii -> ${CWD}/wmiii failed."
-            fi
-        fi
-    else
-        echo " Failed."
-        exit 1
-    fi
 else
     echo "directory wmiii already exists."
+    pushd wmiii
+    git pull
+    popd
+fi
+if [ -d "${HOME}/.wmii-hg" ]; then
+    mv "${HOME}/.wmii-hg" "${bkpdir}/"
+    echo "Moved ${HOME}/.wmii-hg to ${bkpdir}"
+fi
+
+ln -sf "${PWD}/wmiii" "${HOME}/.wmii-hg" && ln -sf "${HOME}/.wmii-hg" "${HOME}/.wmii"
+if [ $? -eq 0 ]; then
+    echo "Created ${HOME}/.wmii-hg -> ${PWD}/wmiii"
+    pushd "${HOME}/.wmii-hg"
+    make install
+    make installx
+    popd
+else
+    echo "Link creation ${HOME}/.wmii -> ${PWD}/wmiii failed."
 fi
 
 echo -n "Getting bashophilia from github  ... "
@@ -154,6 +148,12 @@ cp "${PWD}/bashophilia/share/dot.boprc" "${HOME}/.boprc"
 echo -n "Create .xbindkeyrc ... "
 xbindkeys --defaults > ${HOME}/.xbindkeysrc
 echo " Done."
+
+if [ "$(find ${bkpdir} -type d -empty)" == "${bkpdir}" ]; then
+    rm -rf "${bkpdir}"
+else
+    echo "All pre-existing files have been saved under ${bkpdir}."
+fi
 
 echo "(1) Add the following line into /etc/fstab"
 echo "      shm /dev/shm/wmii tmpfs defaults,user,noexec,nodev,nosuid,noauto,noatime,size=1024M,nr_inodes=8k,mode=777 0 0"
