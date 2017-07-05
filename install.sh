@@ -1,6 +1,7 @@
 #!/bin/bash
 # Change as needed
 GITDIR="${HOME}/git"
+WMII_ROOT=${HOME}/.wmii-hg
 rv="$(lsb_release -d)"
 descr="${rv##Description:}"
 distro="${descr%% *}"
@@ -36,14 +37,14 @@ if [ ${#pkgmgr} -eq 0 ]; then
 fi
 
 declare -A packages
-packages['apt-get']="acpi alsa-utils convert feh htop libxft-dev fonts-dejavu-core gawk gxmessage libatasmart-bin ttf-dejavu xbindkeys sed ssh-askpass tmux vim wmii wpasupplicant xautolock xclip xinit xsel xterm xtrlock"
+packages['apt-get']="acpi alsa-utils chromium-broswer feh firefox htop imagemagick libxft-dev fonts-dejavu-core gawk gxmessage libatasmart-bin ttf-dejavu xbindkeys sed ssh-askpass tmux vim wmii wpasupplicant xautolock xclip xinit xsel xterm xtrlock"
 packages['yum']="acpi alsa-utils ImageMagick feh htop libXft-devel dejavu-fonts-common gawk gxmessage libatasmart xbindkeys sed x11-ssh-askpass tmux vim wmii wpa_supplicant xautolock xclip xinit xsel xterm xlockmore"
 packages['dnf']="acpi alsa-utils ImageMagick feh htop libXft-devel dejavu-fonts-common gawk gxmessage libatasmart xbindkeys sed x11-ssh-askpass tmux vim wmii wpa_supplicant xautolock xclip xinit xsel xterm xlockmore"
 
 echo -n "Installing necessary packages ... "
 case "${pkgmgr}" in
     apt-get|dnf)
-        bash -c "sudo ${pkgbin} -y install ${packages[@]}"
+        bash -c "sudo ${pkgbin} -y install ${packages["${pkgmgr}"]}"
         if [ $? -eq 0 ]; then
             echo " DONE."
             echo
@@ -114,20 +115,20 @@ else
     git pull
     popd
 fi
-if [ -d "${HOME}/.wmii-hg" ]; then
-    mv "${HOME}/.wmii-hg" "${bkpdir}/"
-    echo "Moved ${HOME}/.wmii-hg to ${bkpdir}"
+if [ -d "${WMII_ROOT}" ]; then
+    mv "${WMII_ROOT}" "${bkpdir}/"
+    echo "Moved ${WMII_ROOT} to ${bkpdir}"
 fi
 
-ln -sf "${PWD}/wmiii" "${HOME}/.wmii-hg" && ln -sf "${HOME}/.wmii-hg" "${HOME}/.wmii"
+ln -sf "${PWD}/wmiii" "${WMII_ROOT}"
 if [ $? -eq 0 ]; then
-    echo "Created ${HOME}/.wmii-hg -> ${PWD}/wmiii"
-    pushd "${HOME}/.wmii-hg"
+    echo "Created ${WMII_ROOT} -> ${PWD}/wmiii"
+    pushd "${WMII_ROOT}"
     make install
     make installx
     popd
 else
-    echo "Link creation ${HOME}/.wmii -> ${PWD}/wmiii failed."
+    echo "Link creation ${WMII_ROOT} -> ${PWD}/wmiii failed."
 fi
 
 echo -n "Getting bashophilia from github  ... "
