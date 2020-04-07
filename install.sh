@@ -39,9 +39,9 @@ if [ ${#pkgmgr} -eq 0 ]; then
 fi
 
 declare -A packages
-packages['apt-get']="multitail acpi alsa-utils chromium-browser feh firefox htop imagemagick libxft-dev fonts-dejavu-core gawk gxmessage libatasmart-bin ttf-dejavu xbindkeys sed ssh-askpass tmux rxvt-unicode-256color vim wmii wpasupplicant xautolock xclip xinit xsel xterm xtrlock"
-packages['yum']="multitail acpi alsa-utils ImageMagick feh htop libXft-devel dejavu-fonts-common gawk gxmessage libatasmart xbindkeys sed x11-ssh-askpass tmux vim wmii wpa_supplicant xautolock xclip xinit xsel xterm xlockmore"
-packages['dnf']="multitail acpi alsa-utils ImageMagick feh htop libXft-devel dejavu-fonts-common gawk gxmessage libatasmart xbindkeys sed x11-ssh-askpass tmux vim wmii wpa_supplicant xautolock xclip xinit xsel xterm xlockmore"
+packages['apt-get']="gcc make gpg multitail acpi alsa-utils feh firefox-esr htop imagemagick libxft-dev fonts-dejavu-core gawk gxmessage libatasmart-bin ttf-dejavu xbindkeys sed ssh-askpass tmux rxvt-unicode-256color vim wmii wpasupplicant xautolock xclip xinit xsel xterm xtrlock"
+packages['yum']="gcc make gpg multitail acpi alsa-utils ImageMagick feh htop libXft-devel dejavu-fonts-common gawk gxmessage libatasmart xbindkeys sed x11-ssh-askpass tmux vim wmii wpa_supplicant xautolock xclip xinit xsel xterm xlockmore"
+packages['dnf']="gcc make gpg multitail acpi alsa-utils ImageMagick feh htop libXft-devel dejavu-fonts-common gawk gxmessage libatasmart xbindkeys sed x11-ssh-askpass tmux vim wmii wpa_supplicant xautolock xclip xinit xsel xterm xlockmore"
 
 echo -n "Installing necessary packages ... "
 case "${pkgmgr}" in
